@@ -21,6 +21,9 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
+import CatProfile from '../CatProfile/CatProfile';
+import CatMedical from '../CatMedical/Cat Medical';
+import UpdateMedicalForm from '../UpdateMedicalForm/UpdateMedicalForm';
 
 function App() {
   const dispatch = useDispatch();
@@ -108,7 +111,29 @@ function App() {
               // Otherwise, show the Landing page
               <LandingPage />
             }
-          </Route>
+            </Route>
+          <ProtectedRoute
+            // logged in shows UserPage else shows LoginPage
+            exact
+            path="/catprofile"
+          >
+            <CatProfile />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/catmedical/:catId"
+          >
+            <CatMedical />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/updatemedical/:catId"
+          >
+            <UpdateMedicalForm />
+          </ProtectedRoute>
+
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
