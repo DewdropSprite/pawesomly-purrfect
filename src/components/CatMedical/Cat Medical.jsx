@@ -41,6 +41,7 @@ function CatMedical() {
       <button onClick={handleClick}>
         Edit {cat.pet_name}'s Information
       </button>
+      <button>Delete {cat.pet_name}'s Profile </button>
     </div>
   );
 

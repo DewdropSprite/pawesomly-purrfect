@@ -1,47 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-
-
-
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 function CatProfile() {
-    let history = useHistory();
-    let dispatch = useDispatch();
-    let catProfile = useSelector(store => store.catProfile)
-//   const [heading, setHeading] = useState('Functional Component');
+  let history = useHistory();
+  let dispatch = useDispatch();
+  let catProfile = useSelector((store) => store.catProfile);
+  //   const [heading, setHeading] = useState('Functional Component');
 
-useEffect(() => {
-    dispatch({type: 'FETCH_CAT_PROFILE' })
-}, [dispatch])
+  useEffect(() => {
+    dispatch({ type: "FETCH_CAT_PROFILE" });
+  }, [dispatch]);
 
-const handleClick = (catId) => {
+  const handleCatMedical = (catId) => {
     history.push(`/catmedical/${catId}`);
-    dispatch({ type: 'FETCH_MEDICAL', payload: catId})
-  }
+    dispatch({ type: "FETCH_MEDICAL", payload: catId });
+  };
 
-// console.log("catId catprofile", catId)
+  const handleAddCat = () => {
+    history.push(`/catform`);
+  };
 
   return (
     <main>
-        <h3>Select a Profile! </h3>
+      <h3>Tiffany's Cats </h3>
 
-        
-    <section>
-        {catProfile.map(cat => {
-            return(
-                <div key={cat.id}>
-                    
-                    
-{/* render cat picture - currently not working   */}
-                    <img onClick={() => handleClick(cat.id)}
-                    src={cat.pet_photo}
-                    alt={cat.name}
-                    />
-                </div>
-            )
+      <section>
+        {catProfile.map((cat) => {
+          return (
+            <div key={cat.id}>
+              <img
+                onClick={() => handleCatMedical(cat.id)}
+                src={cat.photo_url}
+                alt={cat.name}
+                style={{ width: "200px", height: "auto" }}
+              />
+            </div>
+          );
         })}
-    </section>
+      </section>
+      <button onClick={handleAddCat}>Add a Cat</button>
     </main>
   );
 }

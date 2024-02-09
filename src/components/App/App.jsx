@@ -24,6 +24,9 @@ import './App.css';
 import CatProfile from '../CatProfile/CatProfile';
 import CatMedical from '../CatMedical/Cat Medical';
 import UpdateMedicalForm from '../UpdateMedicalForm/UpdateMedicalForm';
+import CatForm from '../CatForm/CatForm';
+
+
 
 function App() {
   const dispatch = useDispatch();
@@ -132,6 +135,13 @@ function App() {
             path="/updatemedical/:catId"
           >
             <UpdateMedicalForm />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/catform"
+          >
+            <CatForm />
           </ProtectedRoute>
 
 
