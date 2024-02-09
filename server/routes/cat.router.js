@@ -15,7 +15,9 @@ router.get('/', (req, res) => {
   if (req.isAuthenticated()){
   // let queryText = `SELECT * FROM pet_info;`
   let queryText = `
-SELECT * FROM "pet_info";
+SELECT "pet_info".*, "pet_photo"."photo_url"
+FROM "pet_info"
+JOIN "pet_photo" ON "pet_info"."pet_photo_id" = "pet_photo"."id";
   `
   pool
   .query(queryText)
@@ -33,30 +35,41 @@ SELECT * FROM "pet_info";
 /**
  * POST route template
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // POST route code here
-  console.log("/cat POST route", req.body);
-  console.log("is authenticated?", req.isAuthenticated());
-  console.log("user", req.user);
-  if(req.isAuthenticated()) {
-    let queryText = `
-    INSERT INTO "pet_info" ("owner_id", "medical_record_id", "name", "birthdate", "microchip_id")
-    VALUES ($1, $2, $3, $4, $5);`
+  const {ownerId, name, birthdate, microchip_id, distemper, rabies, annual_checkup, spay_neuter, photo_url} = req.body;
+  console.log("newCat in POST:", req.body)
 
-    let queryParams = [req.body.owner_id, req.body.medical_record_id, req.body.name, req.body.birthdate, req.body.microchip_id]
-    pool
-    .query(queryText, queryParams)
-    .then((result) => {
-      res.sendStatus(201)
-    })
-      .catch((error) => {
-        console.log("error", error)
-        res.sendStatus(500);
-      })
-    }
-    else{
-      res.sendStatus(403)
-    }
-    })
+  try{
+    await pool.query('BEGIN');
+
+    const queryTextMedicalRecord= await pool.query(`  
+    INSERT INTO "medical_record" ("birthdate", "microchip_id", "distemper", "rabies", "annual_checkup", "spay_neuter")
+    VALUES ($1,$2,$3,$4,$5,$6)
+    RETURNING "id" INTO "medical_record_id"`, [birthdate, microchip_id, distemper, rabies, annual_checkup, spay_neuter]
+)
+const medicalRecordId = queryTextMedicalRecord.rows[0].id;
+
+const queryTextPetPhoto = await pool.query(
+`  INSERT INTO "pet_photo" ("photo_url")
+VALUES ($7)
+RETURNING "id"`, [photo_url]
+)
+const petPhotoId = queryTextPetPhoto.rows[0].id;
+
+await pool.query(
+  `  INSERT INTO "pet_info" ("name", "owner_id", "medical_record_id", "pet_photo_id")
+  VALUES ($8,$9,$10,$11)`, [name, ownerId, medicalRecordId, petPhotoId]
+);
+await pool.query('COMMIT');
+res.send("New pet was added successfully!");
+}
+catch(error){
+  await pool.query('ROLLBACK');
+  console.log("error", error)
+  res.sendStatus(500)
+}
+});
+
 
 module.exports = router;
