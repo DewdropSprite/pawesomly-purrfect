@@ -4,11 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-function UpdateMedicalForm() {
+function EditProfileForm() {
   let history = useHistory();
   let dispatch = useDispatch();
-  let catMedical = useSelector((store) => store.catMedical);
+  let catprofile = useSelector((store) => store.catprofile);
 
+  function handleSubmit(){
+    history.push('/catprofile')
+  }
+  
   return (
     <div>
       <h2>Edit Information </h2>
@@ -27,10 +31,10 @@ function UpdateMedicalForm() {
       </ul><ul>
       <input type="text" placeholder="Spayed or Neutered" />
       </ul><ul>
-      <button>Save</button>
+      <button onClick={handleSubmit}>Save</button>
       </ul>
     </div>
   );
 }
 
-export default UpdateMedicalForm;
+export default EditProfileForm;

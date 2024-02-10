@@ -21,11 +21,13 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
-import CatProfile from '../CatProfile/CatProfile';
-import CatMedical from '../CatMedical/Cat Medical';
-import UpdateMedicalForm from '../UpdateMedicalForm/UpdateMedicalForm';
-import CatForm from '../CatForm/CatForm';
 
+
+
+import AddCatForm from '../AddCatForm/AddCatForm';
+import CatList from '../CatList/CatList';
+import CatProfile from '../CatProfile/CatProfile';
+import EditProfileForm from '../EditProfileForm/EditProfileForm';
 
 
 function App() {
@@ -120,28 +122,28 @@ function App() {
             exact
             path="/catprofile"
           >
+            <CatList />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/catprofile/:catId"
+          >
             <CatProfile />
           </ProtectedRoute>
 
           <ProtectedRoute
             exact
-            path="/catmedical/:catId"
+            path="/editprofile/:catId"
           >
-            <CatMedical />
-          </ProtectedRoute>
-
-          <ProtectedRoute
-            exact
-            path="/updatemedical/:catId"
-          >
-            <UpdateMedicalForm />
+            <EditProfileForm />
           </ProtectedRoute>
 
           <ProtectedRoute
             exact
             path="/catform"
           >
-            <CatForm />
+            <AddCatForm />
           </ProtectedRoute>
 
 
