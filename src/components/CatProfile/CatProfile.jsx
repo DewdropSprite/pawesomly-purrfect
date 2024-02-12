@@ -14,10 +14,11 @@ function CatProfile() {
     dispatch({ type: "FETCH_CAT_PROFILE" });
   }, []);
 
-//! catId is console.logging as a number in the console.. this code converts it to make it the same type as pet_id in the database
+  //! catId is console.logging as a number in the console.. this code converts it to make it the same type as pet_id in the database
   const cat = catProfile.find((cat) => cat.pet_info_id === Number(catId));
 
-  console.log("cat",cat)
+  console.log("cat", cat);
+
   const handleClick = (catId) => {
     history.push(`/editprofile/${catId}`);
   };
@@ -27,7 +28,27 @@ function CatProfile() {
   }
 
   console.log("catProfile reducer", catProfile);
-  console.log("catId:", catId)
+  console.log("catId:", catId);
+
+  function handleDelete(event) {
+    event.preventDefault();
+
+    console.log("delete cat id:", catId);
+
+    axios({
+      method: 'DELETE',
+      url: `/api/cat/${catId}`
+    })
+      .then(function (response) {
+        console.log("Deleted", catId);
+        dispatch({type: 'REMOVE_CAT_PROFILE', catId })
+        // history.push(`/catlist`);
+
+      })
+      .catch(function (error) {
+        alert("error", error);
+      });
+  }
 
   return (
     <div>
@@ -39,13 +60,10 @@ function CatProfile() {
       <p>Rabies: {cat.rabies}</p>
       <p>Distemper: {cat.distemper} </p>
       <p>Spayed or Neutered? {cat.spay_neuter}</p>
-      <button onClick={handleClick}>
-        Edit {cat.name}'s Information
-      </button>
-      <button>Delete {cat.name}'s Profile </button>
+      <button onClick={handleClick}>Edit {cat.name}'s Information</button>
+      <button onClick={handleDelete}>Delete {cat.name}'s Profile </button>
     </div>
   );
-
 }
 
 export default CatProfile;
