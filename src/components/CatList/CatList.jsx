@@ -9,6 +9,7 @@ function CatList() {
   //   const [heading, setHeading] = useState('Functional Component');
 
   useEffect(() => {
+    console.log('in useEffect')
     dispatch({ type: "FETCH_CAT_PROFILE" });
   }, [dispatch]);
 

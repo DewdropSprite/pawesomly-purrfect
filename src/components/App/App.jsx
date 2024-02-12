@@ -112,10 +112,10 @@ function App() {
           >
             <CatList />
           </ProtectedRoute>
-
+{/* 
           <ProtectedRoute exact path="/catprofile">
             <CatProfile />
-          </ProtectedRoute>
+          </ProtectedRoute> */}
 
           <ProtectedRoute exact path="/catprofile/:catId">
             <CatProfile />
@@ -125,7 +125,7 @@ function App() {
             <EditProfileForm />
           </ProtectedRoute>
 
-          <ProtectedRoute exact path="/catform/:catId">
+          <ProtectedRoute exact path="/catform/">
             <AddCatForm />
           </ProtectedRoute>
 
