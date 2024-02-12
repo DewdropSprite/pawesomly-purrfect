@@ -121,6 +121,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 router.delete("/:id", async (req, res) => {
   let connection;
   try {
@@ -173,4 +174,105 @@ router.delete("/:id", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+
+//! name
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlName = `
+  UPDATE pet_info 
+  SET name = $1 WHERE id = $2;`
+  pool.query(sqlName, [req.body.name, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! birthdate
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+
+  const sqlBirthdate = `
+  UPDATE medical_record 
+  SET birthdate = $1 WHERE id = $2;`
+  pool.query(sqlBirthdate, [req.body.birthdate, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! microchip
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlMicrochip = `
+  UPDATE medical_record
+  SET microchip_id = $1 WHERE id = $2;`
+  pool.query(sqlMicrochip, [req.body.microchip_id, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! rabies
+/
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlRabies = `
+  UPDATE medical_record 
+  SET name = $1 WHERE id = $2;`
+  pool.query(sqlRabies, [req.body.rabies, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! distemper
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlDistemper = `
+  UPDATE medical_record 
+  SET distemper = $1 WHERE id = $2;`
+  pool.query(sqlDistemper, [req.body.distemper, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! checkup
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlCheckup = `
+  UPDATE medical_record
+  SET name = $1 WHERE id = $2;`
+  pool.query(sqlCheckup, [req.body.annual_checkup, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
+
+// //! spay neuter
+router.put("/:id", (req, res) => {
+  const idToUpdate = req.params.id;
+  const sqlSpayNeuter = `
+  UPDATE medical_record
+  SET spay_neuter = $1 WHERE id = $2;`
+  pool.query(sqlSpayNeuter, [req.body.spay_neuter, idToUpdate])
+  .then((result)=> {
+    res.sendStatus(200)})
+  .catch((error) => {
+    console.log('Error', error)
+    res.sendStatus(500)})
+})
 module.exports = router;

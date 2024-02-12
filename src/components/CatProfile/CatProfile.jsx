@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-function CatProfile() {
+function CatProfile(props) {
   let history = useHistory();
   let dispatch = useDispatch();
   const catProfile = useSelector((store) => store.catProfile);
@@ -19,7 +19,9 @@ function CatProfile() {
 
   console.log("cat", cat);
 
-  const handleClick = (catId) => {
+  const handleEdit = () => {
+    console.log("handle edit click for:", catId)
+    dispatch({ type: 'SET_EDIT_CAT', payload: cat})
     history.push(`/editprofile/${catId}`);
   };
 
@@ -42,7 +44,7 @@ function CatProfile() {
       .then(function (response) {
         console.log("Deleted", catId);
         dispatch({type: 'REMOVE_CAT_PROFILE', catId })
-        // history.push(`/catlist`);
+        history.push(`/catlist`);
 
       })
       .catch(function (error) {
@@ -60,7 +62,7 @@ function CatProfile() {
       <p>Rabies: {cat.rabies}</p>
       <p>Distemper: {cat.distemper} </p>
       <p>Spayed or Neutered? {cat.spay_neuter}</p>
-      <button onClick={handleClick}>Edit {cat.name}'s Information</button>
+      <button onClick={handleEdit}>Edit {cat.name}'s Information</button>
       <button onClick={handleDelete}>Delete {cat.name}'s Profile </button>
     </div>
   );
