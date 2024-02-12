@@ -39,8 +39,8 @@ function Nav() {
         <Link className="navLink" to="/about">
           About
         </Link>
-        <Link className="catProfileLink" to="/catProfile">
-          Cat Profile
+        <Link className="catlist" to="/catlist">
+          Cat Profiles
         </Link>
       </div>
     </div>

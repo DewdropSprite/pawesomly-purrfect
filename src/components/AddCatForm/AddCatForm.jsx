@@ -10,7 +10,7 @@ const AddCatForm = () => {
   let dispatch = useDispatch('');
   let history = useHistory('');
 
-  const addCat = useSelector((store) => store.addCat)
+  // const addCat = useSelector((store) => store.addCat)
 
   
 
@@ -26,8 +26,10 @@ const AddCatForm = () => {
 
   const addNewCat = event => {
     event.preventDefault();
+    // const payload = {name: newCat}
     dispatch({type: 'ADD_CAT', payload: newCat});
     setCat('');
+    history.push('/catlist')
   }
 
 return(
@@ -42,9 +44,7 @@ return(
       <input type="text" name="rabies" placeholder="Rabies" value={newCat.rabies} onChange={handleChange}/>
       <input type="text" name="spay_neuter" placeholder="Spay or Neutered" value={newCat.spay_neuter} onChange={handleChange}/>
       <input type="text" name="photo_url" placeholder="Photo URL" value={newCat.photo_url} onChange={handleChange}/>
-      {/* <input type="text" placeholder="Owner ID" value={newCat.owner_id} onChange={handleChange}/>
-      <input type="text" placeholder="Pet ID" value={newCat.pet_id} onChange={handleChange}/> */}
-            <button type="submit" value="submit">Save</button>
+    <button type="submit" value="submit">Save</button>
     </form>
   </div>
 )

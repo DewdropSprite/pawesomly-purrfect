@@ -12,6 +12,7 @@ function* fetchCat() {
   }
 }
 
+
 function* catSaga() {
   yield takeLatest('FETCH_CAT_PROFILE', fetchCat);
 }

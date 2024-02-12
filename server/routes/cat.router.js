@@ -2,32 +2,6 @@ const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
 
-// router.get("/", (req, res) => {
-//   // GET route code here
-//   console.log("/cat GET route");
-//   console.log("is authenticate?", req.isAuthenticated());
-//   console.log("user", req.user);
-
-//   if (req.isAuthenticated()) {
-//     // let queryText = `SELECT * FROM pet_info;`
-//     let queryText = `
-// SELECT "pet_info".*, "pet_photo"."photo_url"
-// FROM "pet_info"
-// JOIN "pet_info" ON "pet_photo"."pet_info_id" = "pet_info"."id";
-//   `;
-//     pool
-//       .query(queryText)
-//       .then((result) => {
-//         res.send(result.rows);
-//       })
-//       .catch((error) => {
-//         console.log("error", error);
-//         res.sendStatus(500);
-//       });
-//   } else {
-//     res.sendStatus(403);
-//   }
-// });
 router.get("/", async (req, res) => {
   let connection;
 
@@ -54,13 +28,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-
-
 router.post("/", async (req, res) => {
   let connection;
 
   try {
-    // const user = req.user.id;
+    const user = req.user.id;
 
     const {
       birthdate,
@@ -74,6 +46,9 @@ router.post("/", async (req, res) => {
       photo_url,
     } = req.body;
 
+    console.log("req.body:", req.body);
+    console.log("req.user.id", user);
+
     const medicalRecord = [
       birthdate,
       microchip_id,
@@ -84,7 +59,7 @@ router.post("/", async (req, res) => {
     ];
     console.log("medicalRecord", medicalRecord);
 
-    const petInfo = [name, owner_id];
+    const petInfo = [name, user];
     console.log("petInfo", petInfo);
 
     const petPhoto = [photo_url];
@@ -117,11 +92,10 @@ router.post("/", async (req, res) => {
   RETURNING id;
   `;
 
-    const petInfoRes = await connection.query(
-      petInfoQuery,
-      [...petInfo,
-      createMedicalRecordId]
-    );
+    const petInfoRes = await connection.query(petInfoQuery, [
+      ...petInfo,
+      createMedicalRecordId,
+    ]);
     const createPetInfoId = petInfoRes.rows[0].id;
 
     //   //! pet photo table
@@ -136,28 +110,67 @@ router.post("/", async (req, res) => {
     await connection.query("COMMIT;");
     res.sendStatus(201);
     connection.release();
-    
   } catch (error) {
     console.log("error", error);
-    
-    if(connection){
-    connection.query("ROLLBACK;");
-    connection.release();
+
+    if (connection) {
+      connection.query("ROLLBACK;");
+      connection.release();
     }
     res.sendStatus(500);
   }
 });
 
-module.exports = router;
+router.delete("/:id", async (req, res) => {
+  let connection;
+  try {
+    const catId = parseInt(req.params.id);
 
-// //! user table
-// const userQuery = `
-// INSERT INTO user
-// (username, password, auth_level)
-// VALUES
-// ($1, $2, $3)
-// RETURNING id;
-// `
-// const userValues = [createPetPhotoId, user]
-// const userRes = await connection.query(userQuery, userValues)
-// const createUserId = userRes.rows[0].id
+    connection = await pool.connect();
+    await connection.query("BEGIN;");
+
+    const deletePhotoQuery = `
+    DELETE FROM pet_photo
+    WHERE pet_info_id = $1;
+    `;
+
+    await connection.query(deletePhotoQuery, [catId]);
+
+    const medicalRecordIdQuery = `
+    SELECT medical_record_id
+    FROM pet_info
+    WHERE id = $1;
+    `;
+
+    const medicalRecordIdResponse = await connection.query(
+      medicalRecordIdQuery,
+      [catId]
+    );
+    const medicalRecordId = medicalRecordIdResponse.rows[0]?.medical_record_id;
+
+    const deletePetInfoQuery = `
+    DELETE FROM pet_info
+    WHERE id = $1;
+    `;
+
+    await connection.query(deletePetInfoQuery, [catId]);
+    if (medicalRecordId) {
+      const deleteMedicalRecordQery = `
+      DELETE FROM medical_record
+      WHERE id = $1;
+      `;
+      await connection.query(deleteMedicalRecordQery, [medicalRecordId]);
+    }
+    await connection.query("COMMIT;");
+    console.log("record was deleted successfully");
+    connection.release();
+  } catch (error) {
+    console.log("error", error);
+    if (connection) {
+      await connection.query("ROLLBACK;");
+      connection.release();
+    }
+    res.sendStatus(500);
+  }
+});
+module.exports = router;
