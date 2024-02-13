@@ -26,6 +26,7 @@ import AddCatForm from "../AddCatForm/AddCatForm";
 import CatList from "../CatList/CatList";
 import CatProfile from "../CatProfile/CatProfile";
 import EditProfileForm from "../EditProfileForm/EditProfileForm";
+import Header from "../Header/Header";
 
 function App() {
   const dispatch = useDispatch();
@@ -128,6 +129,12 @@ function App() {
           <ProtectedRoute exact path="/catform/">
             <AddCatForm />
           </ProtectedRoute>
+{/* 
+          <ProtectedRoute exact path="/header/">
+            <Header />
+          </ProtectedRoute> */}
+
+
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>

@@ -1,6 +1,6 @@
 const editCat = (state  = {}, action) => {
     if(action.type === 'SET_EDIT_CAT'){
-        return action.payload ?? {};
+        return action.payload;
     }
     else if(action.type === 'EDIT_ONCHANGE') {
         return {

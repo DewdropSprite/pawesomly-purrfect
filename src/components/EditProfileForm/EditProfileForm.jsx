@@ -4,46 +4,169 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-function EditProfileForm(props) {
+function EditProfileForm() {
   let history = useHistory();
   let dispatch = useDispatch();
+  
   let editCat = useSelector((store) => store.editCat);
+  
   let { catId } = useParams();
 
-
-  function handleSubmit(event) {
+  function handleNameChange(event) {
     event.preventDefault();
-    axios
-      .put(`/api/cat/${catId}`, catId)
-      .then((response) => {
-        dispatch({ type: "EDIT_CLEAR" });
-        history.push("/catlist");
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  }
+      dispatch
+        ({type: "EDIT_ONCHANGE",
+        payload: { property: "name", value: event.target.value }
+    })}
+    function handleNameSubmit(event) {
+      console.log("editcat", editCat)
+      event.preventDefault();
+      axios
+        .put(`/api/cat/name/${catId}`, editCat)
+        .then((response) => {
+          dispatch({ type: "EDIT_CLEAR" });
+          history.push(`/catprofile/${catId}`);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    dispatch({
-      type: "EDIT_ONCHANGE",
-      payload: { property: name, value: value },
-    });
-  }
+    function handleBirthdateChange(event) {
+      event.preventDefault();
+        dispatch
+          ({type: "EDIT_ONCHANGE",
+          payload: { property: "birthdate", value: event.target.value }
+      })}
+      function handleBirthdateSubmit(event) {
+        console.log("editcat", editCat)
+        event.preventDefault();
+        axios
+          .put(`/api/cat/birthdate/${catId}`, editCat)
+          .then((response) => {
+            dispatch({ type: "EDIT_CLEAR" });
+            history.push(`/catprofile/${catId}`);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+
+
+      function handleMicrochipChange(event) {
+        event.preventDefault();
+          dispatch
+            ({type: "EDIT_ONCHANGE",
+            payload: { property: "microchip_id", value: event.target.value }
+        })}
+        function handleMicrochipSubmit(event) {
+          console.log("editcat", editCat)
+          event.preventDefault();
+          axios
+            .put(`/api/cat/microchip/${catId}`, editCat)
+            .then((response) => {
+              dispatch({ type: "EDIT_CLEAR" });
+              history.push(`/catprofile/${catId}`);
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        }
+
+        function handleDistemperChange(event) {
+          event.preventDefault();
+            dispatch
+              ({type: "EDIT_ONCHANGE",
+              payload: { property: "distemper", value: event.target.value }
+          })}
+          function handleDistemperSubmit(event) {
+            console.log("editcat", editCat)
+            event.preventDefault();
+            axios
+              .put(`/api/cat/distemper/${catId}`, editCat)
+              .then((response) => {
+                dispatch({ type: "EDIT_CLEAR" });
+                history.push(`/catprofile/${catId}`);
+              })
+              .catch((error) => {
+                console.log("error", error);
+              });
+          }
+
+          function handleRabiesChange(event) {
+            event.preventDefault();
+              dispatch
+                ({type: "EDIT_ONCHANGE",
+                payload: { property: "rabies", value: event.target.value }
+            })}
+            function handleRabiesSubmit(event) {
+              console.log("editcat", editCat)
+              event.preventDefault();
+              axios
+                .put(`/api/cat/rabies/${catId}`, editCat)
+                .then((response) => {
+                  dispatch({ type: "EDIT_CLEAR" });
+                  history.push(`/catprofile/${catId}`);
+                })
+                .catch((error) => {
+                  console.log("error", error);
+                });
+            }
+
+            function handleCheckupChange(event) {
+              event.preventDefault();
+                dispatch
+                  ({type: "EDIT_ONCHANGE",
+                  payload: { property: "annual_checkup", value: event.target.value }
+              })}
+              function handleCheckupSubmit(event) {
+                console.log("editcat", editCat)
+                event.preventDefault();
+                axios
+                  .put(`/api/cat/checkup/${catId}`, editCat)
+                  .then((response) => {
+                    dispatch({ type: "EDIT_CLEAR" });
+                    history.push(`/catprofile/${catId}`);
+                  })
+                  .catch((error) => {
+                    console.log("error", error);
+                  });
+              }
+
+              function handleSpayNeuterChange(event) {
+                event.preventDefault();
+                  dispatch
+                    ({type: "EDIT_ONCHANGE",
+                    payload: { property: "spayneuter", value: event.target.value }
+                })}
+                function handleSpayNeuterSubmit(event) {
+                  console.log("editcat", editCat)
+                  event.preventDefault();
+                  axios
+                    .put(`/api/cat/spayneuter/${catId}`, editCat)
+                    .then((response) => {
+                      dispatch({ type: "EDIT_CLEAR" });
+                      history.push(`/catprofile/${catId}`);
+                    })
+                    .catch((error) => {
+                      console.log("error", error);
+                    });
+                }
+
+
 
   return (
     <div>
       <h2>Would you like to change {editCat.name}'s name? </h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           name="name"
-          onChange={handleChange}
+          onChange={handleNameChange}
           value={editCat.name}
           type="text"
           placeholder="Name"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleNameSubmit}>Save</button>
       </form>
       <div>
         <h2>
@@ -54,62 +177,62 @@ function EditProfileForm(props) {
       <form>
         <h6>Birthdate</h6>
         <input
-          name="birthdate"
-          onChange={handleChange}
+          birthdate="birthdate"
+          onChange={handleBirthdateChange}
           value={editCat.birthdate}
           type="text"
           placeholder="Birthdate"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleBirthdateSubmit}>Save</button>
 
         <h6>Microchip ID:</h6>
         <input
-          name="microchip_id"
-          onChange={handleChange}
+          microchip="microchip_id"
+          onChange={handleMicrochipChange}
           value={editCat.microchip_id}
           type="text"
           placeholder="Microchip Information"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleMicrochipSubmit}>Save</button>
 
         <h6>Rabies Vaccine</h6>
         <input
-          name="rabies"
-          onChange={handleChange}
+          rabies="rabies"
+          onChange={handleRabiesChange}
           value={editCat.rabies}
           type="text"
           placeholder="Rabies Vaccine Date"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleRabiesSubmit}>Save</button>
 
         <h6>Distemper Vaccine </h6>
         <input
-          name="distemper"
-          onChange={handleChange}
+          distemper="distemper"
+          onChange={handleDistemperChange}
           value={editCat.distemper}
           type="text"
           placeholder="Distemper Vaccine Date"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleDistemperSubmit}>Save</button>
 
         <h6>Last Checkup</h6>
         <input
-          name="annual_checkup"
-          onChange={handleChange}
+          checkup="annual_checkup"
+          onChange={handleCheckupChange}
           value={editCat.annual_checkup}
           placeholder="Last Annual Checkup"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleCheckupSubmit}>Save</button>
 
         <h6>Spayed or Neutered? </h6>
         <input
-          name="spay_neuter"
-          onChange={handleChange}
+          spayneuter="spay_neuter"
+          onChange={handleSpayNeuterChange}
           value={editCat.spay_neuter}
           type="text"
           placeholder="Spayed or Neutered"
         />
-        <button type="submit">Save</button>
+        <button onClick={handleSpayNeuterSubmit}>Save</button>
       </form>
     </div>
   );
