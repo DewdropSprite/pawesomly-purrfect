@@ -177,7 +177,7 @@ router.delete("/:id", async (req, res) => {
 
 
 //! name
-router.put("/:id", (req, res) => {
+router.put("/name/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlName = `
   UPDATE pet_info 
@@ -191,7 +191,7 @@ router.put("/:id", (req, res) => {
 })
 
 // //! birthdate
-router.put("/:id", (req, res) => {
+router.put("/birthdate/:id", (req, res) => {
   const idToUpdate = req.params.id;
 
   const sqlBirthdate = `
@@ -206,7 +206,7 @@ router.put("/:id", (req, res) => {
 })
 
 // //! microchip
-router.put("/:id", (req, res) => {
+router.put("/microchip/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlMicrochip = `
   UPDATE medical_record
@@ -221,11 +221,11 @@ router.put("/:id", (req, res) => {
 
 // //! rabies
 /
-router.put("/:id", (req, res) => {
+router.put("/rabies/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlRabies = `
   UPDATE medical_record 
-  SET name = $1 WHERE id = $2;`
+  SET rabies = $1 WHERE id = $2;`
   pool.query(sqlRabies, [req.body.rabies, idToUpdate])
   .then((result)=> {
     res.sendStatus(200)})
@@ -235,7 +235,7 @@ router.put("/:id", (req, res) => {
 })
 
 // //! distemper
-router.put("/:id", (req, res) => {
+router.put("/distemper/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlDistemper = `
   UPDATE medical_record 
@@ -249,11 +249,11 @@ router.put("/:id", (req, res) => {
 })
 
 // //! checkup
-router.put("/:id", (req, res) => {
+router.put("/checkup/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlCheckup = `
   UPDATE medical_record
-  SET name = $1 WHERE id = $2;`
+  SET annual_checkup = $1 WHERE id = $2;`
   pool.query(sqlCheckup, [req.body.annual_checkup, idToUpdate])
   .then((result)=> {
     res.sendStatus(200)})
@@ -263,7 +263,7 @@ router.put("/:id", (req, res) => {
 })
 
 // //! spay neuter
-router.put("/:id", (req, res) => {
+router.put("/spayneuter/:id", (req, res) => {
   const idToUpdate = req.params.id;
   const sqlSpayNeuter = `
   UPDATE medical_record

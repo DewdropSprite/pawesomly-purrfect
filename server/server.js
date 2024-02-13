@@ -11,6 +11,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const catRouter = require('./routes/cat.router');
 
+
 // Express Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
