@@ -1,6 +1,8 @@
 const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
+const multer = require("multer");
+const path = require('path');
 
 router.get("/", async (req, res) => {
   let connection;
@@ -28,7 +30,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+// Set up multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Define the destination directory for file uploads
+    const dest = path.join(__dirname, '../public/images/');
+    cb(null, dest);
+  },
+  filename: function (req, file, cb) {
+    // Define how files should be named
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + file.originalname);
+  }
+});
+
+// Configure multer instance
+const upload = multer({ storage: storage });
+
+router.post("/", upload.single('photo_url'), async (req, res) => {
   let connection;
 
   try {
@@ -43,7 +62,6 @@ router.post("/", async (req, res) => {
       spay_neuter,
       name,
       owner_id,
-      photo_url,
     } = req.body;
 
     console.log("req.body:", req.body);
@@ -62,7 +80,8 @@ router.post("/", async (req, res) => {
     const petInfo = [name, user];
     console.log("petInfo", petInfo);
 
-    const petPhoto = [photo_url];
+    const photoUrl = req.file ? req.file.path : null;
+    // const petPhoto = [req.file.path];
     console.log("petPhoto", petPhoto);
 
     connection = await pool.connect();
@@ -84,6 +103,7 @@ router.post("/", async (req, res) => {
     const createMedicalRecordId = medicalRecordRes.rows[0].id;
 
     //   //! pet info table
+    
     const petInfoQuery = `
   INSERT INTO pet_info
   (name, owner_id, medical_record_id)
@@ -99,6 +119,7 @@ router.post("/", async (req, res) => {
     const createPetInfoId = petInfoRes.rows[0].id;
 
     //   //! pet photo table
+    if(photoUrl){
     const petPhotoQuery = `
   INSERT INTO pet_photo
   (pet_info_id, photo_url)
@@ -106,7 +127,7 @@ router.post("/", async (req, res) => {
   ($1, $2)
   `;
     await connection.query(petPhotoQuery, [createPetInfoId, ...petPhoto]);
-
+  }
     await connection.query("COMMIT;");
     res.sendStatus(201);
     connection.release();
@@ -114,10 +135,13 @@ router.post("/", async (req, res) => {
     console.log("error", error);
 
     if (connection) {
-      connection.query("ROLLBACK;");
-      connection.release();
+      await connection.query("ROLLBACK;");
     }
     res.sendStatus(500);
+  }finally {
+    if(connection){
+      connection.release();
+    }
   }
 });
 
