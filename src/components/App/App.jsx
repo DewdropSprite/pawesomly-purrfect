@@ -28,6 +28,7 @@ import CatProfile from "../CatProfile/CatProfile";
 import EditProfileForm from "../EditProfileForm/EditProfileForm";
 import Header from "../Header/Header";
 
+
 function App() {
   const dispatch = useDispatch();
 
@@ -129,10 +130,10 @@ function App() {
           <ProtectedRoute exact path="/catform/">
             <AddCatForm />
           </ProtectedRoute>
-{/* 
+
           <ProtectedRoute exact path="/header/">
             <Header />
-          </ProtectedRoute> */}
+          </ProtectedRoute>
 
 
 

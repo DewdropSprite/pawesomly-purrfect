@@ -3,6 +3,8 @@ const app = express();
 require('dotenv').config();
 const PORT = process.env.PORT || 5001;
 
+
+
 // Middleware Includes
 const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
@@ -10,6 +12,7 @@ const passport = require('./strategies/user.strategy');
 // Route Includes
 const userRouter = require('./routes/user.router');
 const catRouter = require('./routes/cat.router');
+
 
 
 // Express Middleware
@@ -27,6 +30,7 @@ app.use(passport.session());
 // Routes
 app.use('/api/user', userRouter);
 app.use('/api/cat', catRouter);
+
 
 
 

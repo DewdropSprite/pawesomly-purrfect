@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
-// import axios from "axios";
+import axios from "axios";
 
 const AddCatForm = () => {
   let dispatch = useDispatch("");
@@ -15,33 +15,62 @@ const AddCatForm = () => {
 
   const [open, setOpen] = React.useState(false);
 
-  let [newCat, setCat] = useState("");
+  let [newCat, setCat] = useState({
+    name: "",
+    birthdate: "",
+    microchip_id: "",
+    annual_checkup: "",
+    distemper: "",
+    rabies: "",
+    spay_neuter: "",
+    photo_url: null, // Modify to hold file data
+  });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCat({ ...newCat, [name]: value });
   };
 
-  const addNewCat = (event) => {
-    event.preventDefault();
-    setOpen(true);
-    dispatch({ type: "FETCH_ADD_CAT", payload: newCat });
-
-    
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setCat({ ...newCat, photo_url: file });
   };
 
-  const handleClose=(reason) => {
-    if (reason === 'clickaway'){
+  const addNewCat = async (event) => {
+    event.preventDefault();
+    setOpen(true);
+
+    const formData = new FormData();
+    Object.entries(newCat).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    try {
+      await axios.post("/api/cat", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setOpen(true);
+      history.push("/catlist");
+    } catch (error) {
+      console.error("Error adding cat:", error);
+      setOpen(false);
+    }
+  };
+
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
     history.push("/catlist");
-  }
+  };
 
   const action = (
-    <React.Fragment>
+    <>
       <Button color="secondary" size="small" onClick={handleClose}>
-       Close
+        Close
       </Button>
       <IconButton
         size="small"
@@ -51,14 +80,13 @@ const AddCatForm = () => {
       >
         <CloseIcon fontSize="small" />
       </IconButton>
-    </React.Fragment>
+    </>
   );
-
 
   return (
     <div>
       <h3> Create your cat's profile </h3>
-      
+
       <form onSubmit={addNewCat}>
         <input
           type="text"
@@ -109,21 +137,19 @@ const AddCatForm = () => {
           value={newCat.spay_neuter}
           onChange={handleChange}
         />
+        <p>Add Profile Picture</p>
         <input
-          type="text"
-          name="photo_url"
-          placeholder="Photo URL"
-          value={newCat.photo_url}
-          onChange={handleChange}
+          type="file"
+          onChange={handleFileChange}
         />
-      <Button onClick={addNewCat}>Add Profile</Button>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Profile Added Successfully"
-        action={action}
-      />
+        <Button onClick={addNewCat}>Add Profile</Button>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Profile Added Successfully"
+          action={action}
+        />
       </form>
     </div>
   );
