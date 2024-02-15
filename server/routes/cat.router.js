@@ -32,11 +32,9 @@ router.get("/", async (req, res) => {
 
 // Set up multer storage
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Define the destination directory for file uploads
-    const dest = path.join(__dirname, '../public/images/');
-    cb(null, dest);
-  },
+  destination: path.resolve(__dirname,'../..', 'public/Images/'),
+
+
   filename: function (req, file, cb) {
     // Define how files should be named
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -48,7 +46,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/", upload.single('photo_url'), async (req, res) => {
+  console.log("post router")
   let connection;
+  
 
   try {
     const user = req.user.id;
@@ -61,10 +61,10 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
       annual_checkup,
       spay_neuter,
       name,
-      owner_id,
+      owner_id
     } = req.body;
 
-    console.log("req.body:", req.body);
+    console.log("req.body", JSON.stringify(req.body));
     console.log("req.user.id", user);
 
     const medicalRecord = [
@@ -80,9 +80,9 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
     const petInfo = [name, user];
     console.log("petInfo", petInfo);
 
-    const photoUrl = req.file ? req.file.path : null;
+    const photoUrl = req.file ? `/Images/${req.file.filename}` : null;
     // const petPhoto = [req.file.path];
-    console.log("petPhoto", petPhoto);
+    console.log("photoUrl", photoUrl);
 
     connection = await pool.connect();
     connection.query("BEGIN;");
@@ -126,11 +126,11 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
   VALUES
   ($1, $2)
   `;
-    await connection.query(petPhotoQuery, [createPetInfoId, ...petPhoto]);
+    await connection.query(petPhotoQuery, [createPetInfoId, photoUrl]);
   }
     await connection.query("COMMIT;");
     res.sendStatus(201);
-    connection.release();
+    // connection.release();
   } catch (error) {
     console.log("error", error);
 

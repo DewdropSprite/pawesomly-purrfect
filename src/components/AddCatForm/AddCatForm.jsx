@@ -14,6 +14,7 @@ const AddCatForm = () => {
   let history = useHistory("");
 
   const [open, setOpen] = React.useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   let [newCat, setCat] = useState({
     name: "",
@@ -49,22 +50,33 @@ const AddCatForm = () => {
       await axios.post("/api/cat", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
+        },   
       });
-      setOpen(true);
-      history.push("/catlist");
+      dispatch({ type: 'ADD_CAT', payload: newCat });
+      // setOpen(true); 
+      setShouldRedirect(true);
     } catch (error) {
       console.error("Error adding cat:", error);
       setOpen(false);
     }
   };
 
+  useEffect(() => {
+    if (!open && shouldRedirect) {
+      // Wait for Snackbar to close, then navigate
+      history.push("/catlist");
+      setShouldRedirect(false); // Reset redirect state
+    }
+  }, [open, shouldRedirect, history]);
+
   const handleClose = (reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpen(false);
-    history.push("/catlist");
+    if(open){
+      history.push("/catlist")
+    }
   };
 
   const action = (

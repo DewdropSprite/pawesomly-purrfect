@@ -42,18 +42,21 @@ function CatProfile(props) {
       url: `/api/cat/${catId}`
     })
       .then(function (response) {
+        
         console.log("Deleted", catId);
         dispatch({type: 'REMOVE_CAT_PROFILE', catId })
-        history.push(`/catlist`);
+        
 
       })
       .catch(function (error) {
         alert("error", error);
       });
+      history.push(`/catlist`);
   }
 
   return (
     <div>
+      {/* <p>{cat.photo_url}</p> */}
       <h4>{cat.name}'s information:</h4>
 
       <p>Birthdate: {cat.birthdate}</p>
