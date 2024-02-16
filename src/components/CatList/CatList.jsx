@@ -71,8 +71,8 @@ function CatList() {
                           </Typography>
 
                           <Typography variant="body2" color="text.secondary">
-                            This is where the about information should go! Add
-                            to the database.
+                            {/* This is where the about information should go! Add
+                            to the database. */}
                           </Typography>
                         </CardContent>
                       </CardActionArea>
