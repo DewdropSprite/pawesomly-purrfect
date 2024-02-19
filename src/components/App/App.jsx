@@ -19,7 +19,7 @@ import InfoPage from "../InfoPage/InfoPage";
 import LandingPage from "../LandingPage/LandingPage";
 import LoginPage from "../LoginPage/LoginPage";
 import RegisterPage from "../RegisterPage/RegisterPage";
-
+// import VirtualCemetary from "../VirtualCemetary/VirtualCemetary";
 import "./App.css";
 
 import AddCatForm from "../AddCatForm/AddCatForm";
@@ -46,13 +46,13 @@ function App() {
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
 
-          {/* Visiting localhost:5173/about will show the about page. */}
+          {/* Visiting localhost:5173/info will show the about page. */}
           <Route
-            // shows AboutPage at all times (logged in or not)
+            // shows InfoPage at all times (logged in or not)
             exact
-            path="/about"
+            path="/info"
           >
-            <AboutPage />
+            <InfoPage />
           </Route>
 
           {/* For protected routes, the view could show one of several things on the same route.
@@ -110,7 +110,7 @@ function App() {
           <ProtectedRoute
             // logged in shows UserPage else shows LoginPage
             exact
-            path="/catlist"
+            path="/user"
           >
             <CatList />
           </ProtectedRoute>
@@ -134,6 +134,10 @@ function App() {
           <ProtectedRoute exact path="/header/">
             <Header />
           </ProtectedRoute>
+
+          {/* <ProtectedRoute exact path="/virtualcemetary/">
+            <VirtualCemetary />
+          </ProtectedRoute> */}
 
 
 

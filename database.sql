@@ -26,11 +26,11 @@ VALUES ('1-1-2011', 'no chip', '1-1-1996', '1-1-1996', '1-1-1996', false),
 CREATE TABLE "pet_info" (
     "id" SERIAL PRIMARY KEY,
     "name" TEXT,
-    "owner_id" INTEGER REFERENCES "user"("id"),
+    "user_id" INTEGER REFERENCES "user"("id"),
     "medical_record_id" INTEGER REFERENCES "medical_record"("id")
 );
 
-INSERT INTO "pet_info" ("name", "owner_id", "medical_record_id")
+INSERT INTO "pet_info" ("name", "user_id", "medical_record_id")
 VALUES ('Max', 1, 1),
 ('Witten', 1, 2);
 

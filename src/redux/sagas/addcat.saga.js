@@ -7,6 +7,7 @@ function* addCatProfileSaga(action) {
   //add the cats:
   const catProfile = yield axios.post('/api/cat', action.payload)
     yield put({ type: 'ADD_CAT', payload: catProfile.data });
+    yield put({ type: 'FETCH_CAT_PROFILE' }); // Refresh the cat profiles list
   } catch (error) {
     console.log('add cat get request failed', error);
   }

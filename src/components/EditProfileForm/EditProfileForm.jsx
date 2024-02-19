@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { DateTime } from 'luxon';
 import axios from "axios";
 
 function EditProfileForm() {
@@ -9,7 +10,8 @@ function EditProfileForm() {
   let dispatch = useDispatch();
   
   let editCat = useSelector((store) => store.editCat);
-  
+
+
   let { catId } = useParams();
 
   function handleNameChange(event) {
@@ -155,87 +157,130 @@ function EditProfileForm() {
 
 
 
-  return (
-    <div>
-      <h2>Would you like to change {editCat.name}'s name? </h2>
-      <form>
-        <input
-          name="name"
-          onChange={handleNameChange}
-          value={editCat.name}
-          type="text"
-          placeholder="Name"
-        />
-        <button onClick={handleNameSubmit}>Save</button>
-      </form>
-      <div>
-        <h2>
-          Would you like to make a change to {editCat.name}'s medical history?
-        </h2>
-      </div>
-
-      <form>
-        <h6>Birthdate</h6>
-        <input
-          birthdate="birthdate"
-          onChange={handleBirthdateChange}
-          value={editCat.birthdate}
-          type="text"
-          placeholder="Birthdate"
-        />
-        <button onClick={handleBirthdateSubmit}>Save</button>
-
-        <h6>Microchip ID:</h6>
-        <input
-          microchip="microchip_id"
-          onChange={handleMicrochipChange}
-          value={editCat.microchip_id}
-          type="text"
-          placeholder="Microchip Information"
-        />
-        <button onClick={handleMicrochipSubmit}>Save</button>
-
-        <h6>Rabies Vaccine</h6>
-        <input
-          rabies="rabies"
-          onChange={handleRabiesChange}
-          value={editCat.rabies}
-          type="text"
-          placeholder="Rabies Vaccine Date"
-        />
-        <button onClick={handleRabiesSubmit}>Save</button>
-
-        <h6>Distemper Vaccine </h6>
-        <input
-          distemper="distemper"
-          onChange={handleDistemperChange}
-          value={editCat.distemper}
-          type="text"
-          placeholder="Distemper Vaccine Date"
-        />
-        <button onClick={handleDistemperSubmit}>Save</button>
-
-        <h6>Last Checkup</h6>
-        <input
-          checkup="annual_checkup"
-          onChange={handleCheckupChange}
-          value={editCat.annual_checkup}
-          placeholder="Last Annual Checkup"
-        />
-        <button onClick={handleCheckupSubmit}>Save</button>
-
-        <h6>Spayed or Neutered? </h6>
-        <input
-          spayneuter="spay_neuter"
-          onChange={handleSpayNeuterChange}
-          value={editCat.spay_neuter}
-          type="text"
-          placeholder="Spayed or Neutered"
-        />
-        <button onClick={handleSpayNeuterSubmit}>Save</button>
-      </form>
-    </div>
-  );
+                return (
+                  <div>
+                    <form>
+                      <h2>Edit {editCat.name}'s Profile </h2>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <th>Name:</th>
+                            <td>{editCat.name}</td>
+                            <td>
+                              <input
+                                name="name"
+                                onChange={handleNameChange}
+                                value={editCat.name}
+                                type="text"
+                                placeholder="New Name"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleNameSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Birthdate:</th>
+                            <td>{editCat.birthdate && DateTime.fromISO(editCat.birthdate).toFormat('LL/ dd/ yyyy')}</td>
+                            <td>
+                              <input
+                                name="birthdate"
+                                onChange={handleBirthdateChange}
+                                value={editCat.birthdate}
+                                type="date"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleBirthdateSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Microchip ID:</th>
+                            <td>{editCat.microchip_id}</td>
+                            <td>
+                              <input
+                                name="microchip_id"
+                                onChange={handleMicrochipChange}
+                                value={editCat.microchip_id}
+                                type="text"
+                                placeholder="New Microchip ID"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleMicrochipSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Rabies Vaccine:</th>
+                            <td>{editCat.rabies && DateTime.fromISO(editCat.rabies).toFormat('LL/ dd/ yyyy')}</td>
+                            <td>
+                              <input
+                                name="rabies"
+                                onChange={handleRabiesChange}
+                                value={editCat.rabies}
+                                type="date"
+                                placeholder="New Rabies Vaccine Date"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleRabiesSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Distemper Vaccine:</th>
+                            <td>{editCat.distemper && DateTime.fromISO(editCat.distemper).toFormat('LL/ dd/ yyyy')}</td>
+                            <td>
+                              <input
+                                name="distemper"
+                                onChange={handleDistemperChange}
+                                value={editCat.distemper}
+                                type="date"
+                                placeholder="New Distemper Vaccine Date"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleDistemperSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Last Checkup:</th>
+                            <td>{editCat.annual_checkup && DateTime.fromISO(editCat.annual_checkup).toFormat('LL/ dd/ yyyy')}</td>
+                            <td>
+                              <input
+                                name="annual_checkup"
+                                onChange={handleCheckupChange}
+                                value={editCat.annual_checkup}
+                                type="date"
+                                placeholder="New Checkup Date"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleCheckupSubmit}>Save</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>Spayed or Neutered?:</th>
+                            <td>{editCat.spay_neuter}</td>
+                            <td>
+                              <input
+                                name="spay_neuter"
+                                onChange={handleSpayNeuterChange}
+                                value={editCat.spay_neuter}
+                                type="text"
+                                placeholder="Update Status"
+                              />
+                            </td>
+                            <td>
+                              <button onClick={handleSpayNeuterSubmit}>Save</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  </div>
+                );
+                
+    
 }
 
 export default EditProfileForm;

@@ -5,18 +5,26 @@ const multer = require("multer");
 const path = require('path');
 
 router.get("/", async (req, res) => {
+  console.log("/cat GET route");
+  console.log("is authenticated?", req.isAuthenticated());
+  console.log("user", req.user);
+
+  if(req.isAuthenticated()){
   let connection;
 
   try {
     connection = await pool.connect(); // Get a connection from the pool
 
+    const userId = req.user.id
+
     const query = `
       SELECT * FROM pet_info
       JOIN medical_record ON pet_info.medical_record_id = medical_record.id
-      JOIN pet_photo ON pet_info.id = pet_photo.pet_info_id;
-    `; // Example query, adjust based on your schema
+      JOIN pet_photo ON pet_info.id = pet_photo.pet_info_id
+      WHERE pet_info.user_id = $1;
+      `; 
 
-    const result = await connection.query(query);
+    const result = await connection.query(query, [userId]);
     const pets = result.rows;
 
     res.json(pets); // Send the result back to the client
@@ -27,6 +35,8 @@ router.get("/", async (req, res) => {
     if (connection) {
       connection.release(); // Always release the connection
     }
+  }} else{
+    res.sendStatus(403);
   }
 });
 
@@ -47,6 +57,10 @@ const upload = multer({ storage: storage });
 
 router.post("/", upload.single('photo_url'), async (req, res) => {
   console.log("post router")
+  console.log("/cat POST route", req.body);
+  console.log("is authenticate?", req.isAuthenticated());
+  console.log("user", req.user);
+  if (req.isAuthenticated()) {
   let connection;
   
 
@@ -61,7 +75,7 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
       annual_checkup,
       spay_neuter,
       name,
-      owner_id
+      user_id
     } = req.body;
 
     console.log("req.body", JSON.stringify(req.body));
@@ -106,7 +120,7 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
     
     const petInfoQuery = `
   INSERT INTO pet_info
-  (name, owner_id, medical_record_id)
+  (name, user_id, medical_record_id)
   VALUES
   ($1, $2, $3)
   RETURNING id;
@@ -131,18 +145,23 @@ router.post("/", upload.single('photo_url'), async (req, res) => {
     await connection.query("COMMIT;");
     res.sendStatus(201);
     // connection.release();
-  } catch (error) {
+  }
+  catch (error) {
     console.log("error", error);
 
     if (connection) {
       await connection.query("ROLLBACK;");
     }
     res.sendStatus(500);
-  }finally {
+  }
+  finally {
     if(connection){
       connection.release();
     }
   }
+}else {
+  res.sendStatus(500)
+};
 });
 
 
@@ -299,4 +318,84 @@ router.put("/spayneuter/:id", (req, res) => {
     console.log('Error', error)
     res.sendStatus(500)})
 })
+
+
+//! routes to add and get a cat to the "virtual cemetary" - currently not working as of 18 February
+// router.post('/:id/cemetary', async (req, res) => {
+//   const catId  = parseInt(req.params.id, 10);
+//   let connection;
+
+//   try {
+//     connection = await pool.connect();
+//     await connection.query('BEGIN');
+
+// //Step 1 - fetch the info that needs to be moved:
+//     const fetchCatInfo = `SELECT * FROM pet_info WHERE id=$1;`;
+//     const catResult = await connection.query(fetchCatInfo, [catId]);
+//     const cat = catResult.rows[0]
+
+//     if (!cat)
+//     {
+//       res.status(404).send({ message: "Cat not found" })
+//       return;
+//     }
+
+//     //Step 2 - Populate pet_cemetary table
+
+
+//     const insertQueryText = `
+//       INSERT INTO pet_cemetary (pet_info_id, name, photo_url, death_date, about)
+//       VALUES ($1, $2, $3, CURRENT_DATE, 'Moved to virtual cemetary') RETURNING *;
+//     `;
+//     await connection.query(insertQueryText, [cat.id, cat.name, cat.photo_url]);
+    
+//     // Delete pet photo record
+
+//     const deletePetPhotoText = `DELETE FROM pet_photo WHERE pet_info_id = $1;`;
+//     await connection.query(deletePetPhotoText, [catId]);
+
+//     //Step 3 - Delete from pet_info
+
+//     const deleteQueryText = `DELETE FROM pet_info WHERE id = $1;`;
+//     await connection.query(deleteQueryText, [catId]);
+
+//     //Delete medical_record
+//     const deleteMedicalQuery = `
+//     DELETE FROM medical_record
+//     WHERE id = $1;
+//     `;
+//     await connection.query(deleteMedicalQuery, [catId]);
+  
+
+//     await connection.query("COMMIT");
+//     res.status(200).send("Pet was moved to the virtual cemetery successfully");
+//   } catch (error) {
+//     console.log("error adding to cemetery", error);
+// await connection.query("ROLLBACK");
+//     res.status(500).send("Error while adding to cemetery: ", error);
+//   } finally {
+//     if (connection) connection.release();
+//   }
+// });
+
+
+// router.get('/cemetary', async (req, res) => {
+//   let connection;
+//   try {
+//     connection = await pool.connect();
+//     const queryText = 'SELECT * FROM pet_cemetary;'
+//     const result = await connection.query(queryText);
+//     const cats = result.rows;
+//     res.json(cats);
+//   } catch (error) {
+//     console.error('Error retrieving pet cemetary:', error);
+//     if(!res.headersSent)
+//     res.status(500).send('Server error');
+//   }finally {
+//     if (connection) {
+//       connection.release();
+//     }
+//   }
+// });
 module.exports = router;
+

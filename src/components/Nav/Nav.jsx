@@ -10,15 +10,20 @@ function Nav() {
   return (
     <div className="nav">
       <Link to="/home">
-        <h2 className="nav-title">Pawesomely Purrfect</h2>
+        <img width="500" height="250" src = "./Public/Images/PawesomelyPurrfectLabel.jpeg"/>
       </Link>
       <div>
         {/* If no user is logged in, show these links */}
         {!user.id && (
-          // If there's no user, show login/registration links
+          <>
+          {/* If there's no user, show login/registration links */}
           <Link className="navLink" to="/login">
             Login / Register
           </Link>
+           <Link className="navLink" to="/info">
+              Info Page
+          </Link>
+          </>
         )}
 
         {/* If a user is logged in, show these links */}
@@ -33,15 +38,17 @@ function Nav() {
             </Link>
 
             <LogOutButton className="navLink" />
-          </>
-        )}
+        
+       
 
         <Link className="navLink" to="/about">
           About
         </Link>
-        <Link className="catlist" to="/catlist">
+        </>
+         )}
+        {/* <Link className="catlist" to="/catlist">
           Cat Profiles
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
