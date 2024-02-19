@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
+import "./AddCatForm.css";
 import axios from "axios";
 
 const AddCatForm = () => {
@@ -50,10 +50,10 @@ const AddCatForm = () => {
       await axios.post("/api/cat", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },   
+        },
       });
-      dispatch({ type: 'ADD_CAT', payload: newCat });
-      // setOpen(true); 
+      dispatch({ type: "ADD_CAT", payload: newCat });
+      // setOpen(true);
       setShouldRedirect(true);
     } catch (error) {
       console.error("Error adding cat:", error);
@@ -64,7 +64,7 @@ const AddCatForm = () => {
   useEffect(() => {
     if (!open && shouldRedirect) {
       // Wait for Snackbar to close, then navigate
-      history.push("/catlist");
+      history.push("/user");
       setShouldRedirect(false); // Reset redirect state
     }
   }, [open, shouldRedirect, history]);
@@ -74,8 +74,8 @@ const AddCatForm = () => {
       return;
     }
     setOpen(false);
-    if(open){
-      history.push("/catlist")
+    if (open) {
+      history.push("/user");
     }
   };
 
@@ -97,63 +97,81 @@ const AddCatForm = () => {
 
   return (
     <div>
-      <h3> Create your cat's profile </h3>
-
       <form onSubmit={addNewCat}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={newCat.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="birthdate"
-          placeholder="Birthday"
-          value={newCat.birthdate}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="microchip_id"
-          placeholder="Microchip Info"
-          value={newCat.microchip_id}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="annual_checkup"
-          placeholder="Last Checkup"
-          value={newCat.annual_checkup}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="distemper"
-          placeholder="Distemper"
-          value={newCat.distemper}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="rabies"
-          placeholder="Rabies"
-          value={newCat.rabies}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="spay_neuter"
-          placeholder="Spay or Neutered"
-          value={newCat.spay_neuter}
-          onChange={handleChange}
-        />
+        <h3> Create your cat's profile </h3>
+
+        <p>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={newCat.name}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Birthdate:
+          <input
+            type="date"
+            name="birthdate"
+            value={newCat.birthdate}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Microchip Information:
+          <input
+            type="text"
+            name="microchip_id"
+            value={newCat.microchip_id}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Last Checkup:
+          <input
+            type="date"
+            name="annual_checkup"
+            value={newCat.annual_checkup}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Last Distemper Vaccine:
+          <input
+            type="date"
+            name="distemper"
+            value={newCat.distemper}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Last Rabies Vaccine:
+          <input
+            type="date"
+            name="rabies"
+            value={newCat.rabies}
+            onChange={handleChange}
+          />
+        </p>
+
+        <p>
+          Spay or Neutered?
+          <input
+            type="text"
+            name="spay_neuter"
+            value={newCat.spay_neuter}
+            onChange={handleChange}
+          />
+        </p>
+
         <p>Add Profile Picture</p>
-        <input
-          type="file"
-          onChange={handleFileChange}
-        />
+        <input type="file" onChange={handleFileChange} />
         <Button onClick={addNewCat}>Add Profile</Button>
         <Snackbar
           open={open}

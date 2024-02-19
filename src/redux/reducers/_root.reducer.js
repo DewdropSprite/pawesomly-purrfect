@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import errors from './errors.reducer';
-import user from './user.reducer';
+import userReducer from './user.reducer';
 import catProfile from './cat.reducer';
 import addCat from './addcat.reducer';
 import removeCat from './removecat.reducer';
@@ -13,7 +13,7 @@ import editCat from './editcat.reducer';
 // This is what we get when we use 'state' inside of 'mapStateToProps'
 const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
-  user, // will have an id and username if someone is logged in
+  user: userReducer, // will have an id and username if someone is logged in
   catProfile, //will have data for the users cat
   addCat,
   removeCat,

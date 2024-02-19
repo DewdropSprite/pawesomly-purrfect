@@ -1,0 +1,19 @@
+.infopage{
+    background-color: rgb(83,83,84);
+    color: antiquewhite;
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h1{
+    text-align: center;
+}
+
+h3{
+    font-size: largest;
+    font-family: Snell Roundhand, cursive;
+}

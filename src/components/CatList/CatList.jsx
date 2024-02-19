@@ -14,6 +14,8 @@ import { styled } from "@mui/material/styles";
 
 
 
+
+
 function CatList() {
   let history = useHistory();
   let dispatch = useDispatch();
@@ -44,35 +46,23 @@ function CatList() {
   return (
     <>
       <main>
-        <h3>Tiffany's Cats </h3>
-
-        {catProfile.map((cat) => {
-          return (
-            <Box sx={{ width: "100%" }}  key={cat.id}>
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                <Grid item xs={6}>
-                  <Item>
-                    <Card sx={{ maxwidth: 150 }}>
-                      <CardActionArea>
-                        <CardMedia
-                          onClick={() => handlecatprofile(cat.id)}
-                          component="img"
-                          height="250"
-                          image={cat.photo_url}
-                          alt={cat.name}
-                        />
+        <p>Your Cats Profiles </p>
+        
+        <Box sx={{ width: "100%" }}>
+          {catProfile.map((cat) => (
+            <Box key={cat.id} sx={{ display: "inline-block", margin: '1%' }}>
+              <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={12}>
+                  <Item sx={{backgroundColor:  "rgb(83, 83, 84)"}}>
+                    <Card>
+                      <CardActionArea onClick={() => handlecatprofile(cat.id)}>
+                        <CardMedia component="img" height="250" image={cat.photo_url} alt={cat.name} />
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="div">
                             {cat.name}
                           </Typography>
-
                           <Typography variant="body2" color="text.secondary">
-                            {/* This is where the about information should go! Add
-                            to the database. */}
+                            {/* This is where the about information should go! Add to the database. */}
                           </Typography>
                         </CardContent>
                       </CardActionArea>
@@ -81,8 +71,8 @@ function CatList() {
                 </Grid>
               </Grid>
             </Box>
-          );
-        })}
+          ))}
+        </Box>
 
         <button onClick={handleAddCat}>Add a Cat</button>
       </main>
